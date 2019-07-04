@@ -300,10 +300,11 @@ void Seguidor(){
 void seguidorVerde(){
        lerSensorDeLinha();
        //int x;
-    //---Verde Verde---
+
+          //---Verde Verde---
     if (VA == verde && VB == verde || VA == verde_2 && VB == verde_2){
        Parar();
-       Wait(10);
+       Wait(45);
        lerSensorDeLinha();
        while(VA == verde && VB == verde || VA == verde_2 && VB == verde_2){
          Frente();
@@ -367,7 +368,8 @@ void seguidorVerde(){
 //--- Fim da função para detectar os verdes antes do seguidor normal ---
 //======================================================================================
 
-//-------------------------------------------------------
+//======================================================================================
+//--- Função para desvio de obstaculo para os dois lados ---
 void desvio(){
       Tras();
       Wait(800);
@@ -394,11 +396,11 @@ void desvio(){
       Frente();
       Wait(300);
       lerSensorDeLinha();
-      while(A < branco)
+      while(A > branco)
       {
       Frente();
         lerSensorDeLinha();
-        if(A > preto){
+        if(A < preto){
           Esquerda();
           Wait(1);
           Seguidor();
@@ -433,11 +435,11 @@ void desvio_2(){
       Frente();
       Wait(300);
       lerSensorDeLinha();
-      while(B < branco)
+      while(B > branco)
       {
       Frente();
         lerSensorDeLinha();
-        if(B > preto){
+        if(B < preto){
           Esquerda();
           Wait(1);
           Seguidor();
@@ -445,7 +447,12 @@ void desvio_2(){
         capoha();
       }
 }
-//---Triangulos---
+
+//--- Fim da função desvio de obstaculo ---
+//======================================================================================
+
+//======================================================================================
+//--- Função dos Triangulos no resgate ---
 void t_1(){
 
       //resgate após o toque
@@ -462,7 +469,7 @@ void t_1(){
       Parar();
       Wait(10);
       Esquerda_O();
-      Wait(1353);
+      Wait(1750);
       Parar();
       Wait(10);
 
@@ -480,12 +487,12 @@ void t_1(){
       Parar();
       Wait(10);
       Direita_O();
-      Wait(1250);
+      Wait(1600);
       Parar();
       Wait(10);
 
       //Testar 2 Parede depois do triangulo.
-      RotateMotor(OUT_BC, 80, 1800);
+      RotateMotor(OUT_BC, 80, 1950);
       Parar();
       Wait(10);
       lerResgate();
@@ -494,58 +501,14 @@ void t_1(){
       }
       Parar();
       Wait(10);
-      RotateMotor(OUT_B, 100, 300);
+      RotateMotor(OUT_C, 100, 500);
+      RotateMotor(OUT_B, 80, -700);
+      Parar();
+      Wait(10);
+      RotateMotor(OUT_C, 80, -500);
       Parar();
       Wait(10);
       Frente_O();
-      Wait(1600);
-      Parar();
-      Wait(10);
-      RotateMotor(OUT_B, 100, 400);
-      Parar();
-      Wait(10);
-      Frente();
-      Wait(500);
-      Parar();
-      Wait(10);
-      Esquerda_O();
-      Wait(1400);
-      Parar();
-      Wait(10);
-      Tras_O();
-      Wait(63);
-      Parar();
-      Wait(10);
-      Garra_D();
-      Wait(2000);
-      Garra_P();
-      Wait(10);
-      Direita();
-      Wait(305);
-
-      
-
-      //Testa 3 Parede depois do triangulo.
-      RotateMotor(OUT_BC, 80, 2500);
-      Parar();
-      Wait(10);
-      lerResgate();
-       if(Resgate == 0){
-       RV();
-      }
-      Parar();
-      Wait(10);
-      RotateMotor(OUT_B, 100, 700);
-      Parar();
-      Wait(10);
-      Frente_O();
-      Wait(1000);
-      Parar();
-      Wait(10);
-      RotateMotor(OUT_B, 100, 200);
-      Parar();
-      Wait(10);
-      Frente();
       Wait(1500);
       Parar();
       Wait(10);
@@ -554,7 +517,7 @@ void t_1(){
       Parar();
       Wait(10);
       Tras_O();
-      Wait(100);
+      Wait(300);
       Parar();
       Wait(1);
       Garra_D();
@@ -564,7 +527,43 @@ void t_1(){
       Direita();
       Wait(300);
 
-      //Testa 4 Parede depois do triangulo.
+      //Testar 3 Parede
+      RotateMotor(OUT_BC, 80, 2500);
+      Parar();
+      Wait(10);
+      lerResgate();
+       if(Resgate == 0){
+       RV();
+      }
+      Parar();
+      Wait(10);
+      RotateMotor(OUT_C, 100, 500);
+      RotateMotor(OUT_B, 80, -1000);
+      Parar();
+      Wait(10);
+      RotateMotor(OUT_C, 80, -400);
+      Parar();
+      Wait(10);
+      Frente_O();
+      Wait(1500);
+      Parar();
+      Wait(10);
+      Esquerda_O();
+      Wait(1200);
+      Parar();
+      Wait(10);
+      Tras_O();
+      Wait(300);
+      Parar();
+      Wait(1);
+      Garra_D();
+      Wait(2000);
+      Garra_P();
+      Wait(10);
+      Direita();
+      Wait(300);
+
+      //Testar madeira
       RotateMotor(OUT_BC, 80, 1000);
       Parar();
       Wait(10);
@@ -575,18 +574,19 @@ void t_1(){
        Parar();
        Wait(1);
        Esquerda_O();
-       Wait(650);
+       Wait(600);
        Parar();
        Wait(10);
       }
       RotateMotor(OUT_BC, 80, 1400);
       Parar();
       Wait(10);
+      
+      //Testar 4 parede
       lerResgate();
        if(Resgate == 0){
        RV();
       }
-
       Parar();
       Wait(10);
       RotateMotor(OUT_B, 100, 400);
@@ -597,16 +597,36 @@ void t_1(){
       Garra_P();
       RotateMotor(OUT_BC, 100, 1400);
       lerResgate();
+      
+       //Teste de trinagulo de volta.
        if(Resgate == 0){
-        Tras_O();
-        Wait(200);
-        curva135Esquerda();
-        RotateMotor(OUT_BC, 100, -400);
+        Parar();
+        Wait(10);
+        Tras();
+        Wait(20);
+        Garra_S();
+        Wait(2000);
+        Garra_P();
+        Esquerda_O();
+        Wait(600);
+        Parar();
+        Wait(10);
+        Rampa();
+        Wait(1600);
+        Parar();
+        Wait(10);
+        Esquerda_O();
+        Wait(2000);
+        Parar();
+        Wait(10);
+
+        //Soltar vitimias
+        RotateMotor(OUT_BC, 100, -500);
         Parar();
         Wait(150);
         Rampa();
         Wait(100);
-        RotateMotor(OUT_BC, 100, -500);
+        RotateMotor(OUT_BC, 100, -600);
         Parar();
         Wait(150);
        }
@@ -618,9 +638,12 @@ void t_2(){
 void t_3(){
 
 }
-//---Fim dos Triangulos---
+//--- Fim das funções dos Triangulos ---
+//======================================================================================
 
-//Resgate de vitimas do meio---
+//======================================================================================
+//--- Função para fazer o Resgate de vitimas ---
+
 void RV(){
 
    Tras();
@@ -629,7 +652,12 @@ void RV(){
    Garra_P();
    Wait(10);
 }
-//-----------------------Resgate---------------------
+
+//--- Fim da função para o Resgate de vitimas ---
+//======================================================================================
+
+//======================================================================================
+//--- Resgate após ah rampa ---
 void ResInicio(){
 
      lerResgate();
@@ -653,6 +681,8 @@ void ResInicio(){
      Wait(2000);
      Garra_P();
      Wait(10);
+     
+     //Meio da sala de resgate
      RotateMotor(OUT_BC, 70, 1900);
      //Testar Parede.
      lerResgate();
@@ -668,7 +698,7 @@ void ResInicio(){
      Parar();
      Wait(10);
      Direita_O();
-     Wait(1600);
+     Wait(2000);
      Parar();
      Wait(10);
      Tras_O();
@@ -683,6 +713,7 @@ void ResInicio(){
      Wait(400);
      Parar();
      Wait(10);
+     
      //Testar Triangulo t_1();
      RotateMotor(OUT_BC, 80, 900);
      Parar();
@@ -699,6 +730,11 @@ void ResInicio(){
      lerDistancia();
      lerSensorDeLinha();
 }
+//--- Fim da função resgate apos a rampa ---
+//======================================================================================
+
+//======================================================================================
+//--- Função para o seguidor da rampa ---
 
 void seguidorRampa(){
  lerSensorDeLinha();
@@ -726,7 +762,12 @@ void seguidorRampa(){
      }
   lerDistancia();
   }
-//-------------------------------------------------------------
+//--- Fim da função do seguidor da rampa ---
+//======================================================================================
+
+//======================================================================================
+//--- Função principal com loop infinito para controle de todo robô ---
+
 task main(){
     Garra_S();
     Wait(1300);
@@ -748,3 +789,5 @@ task main(){
     seguidorVerde();
  }
 }
+//--- Fim da função principa de controle do robô ---
+//======================================================================================
