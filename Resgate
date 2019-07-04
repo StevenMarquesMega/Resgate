@@ -1,0 +1,750 @@
+//======================================================================================
+//--- Parametros para controle de velocidade paras as funcões que possuem motor. ---
+
+#define FRENTE 35
+#define OBSTACULO 60
+#define SEGUIDOR 40
+#define vel_F 80
+#define RAMPA 90
+#define frentao 100
+#define limiar 15
+
+//--- Fim dos parametros de controle de velocidade ---
+//======================================================================================
+
+//======================================================================================
+//--- Variaveis de controle e atribuição de valores para seguidor de linha e verdes ---
+
+int preto = 82;  // menor que 82 preto
+int branco = 82;// maior que 82 branco
+int verde = 4;
+int verde_2 = 3;
+unsigned int A, B, PD, PE, VA, VB;
+unsigned int  ColorNum, Red, Green, Blue;
+unsigned int  ColorNum_2, Red_2, Green_2, Blue_2;
+
+//--- Fim das variaveis de valores do seguidor de linha e verdes ---
+//======================================================================================
+
+//======================================================================================
+//--- Variavel para controle de rotação ---
+
+int curva = 600;
+
+//--- Fim da varivavel que equivale a uma rotação ---
+//======================================================================================
+
+//======================================================================================
+//--- Variaveis para controle de leitura do sensor de inclinação e o sensor de toque ---
+
+int Ultra = 0;
+int Resgate = 0;
+
+//--- Fim das variaveis para sensor de inclinação e o sensor de toque ---
+//======================================================================================
+
+//======================================================================================
+//--- Função para resgate de vitimas ---
+
+void RV();
+
+//--- Fim da função de regate de vitimas ---
+//======================================================================================
+
+//======================================================================================
+//--- Função para fazer leitura do sensor de cor HITECHNIC ---
+
+void lerSensorDeLinha(){
+
+    SetHTColor2Mode(IN_2, HT_CMD_COLOR2_ACTIVE);// Hi Tec
+    SetSensorLowspeed(IN_2);                   // Hi Tec
+
+    SetHTColor2Mode(IN_3, HT_CMD_COLOR2_ACTIVE); // Hi Tec
+    SetSensorLowspeed(IN_3);                   // Hi Tec
+
+  	unsigned int  ColorNum, Red, Green, Blue;
+  	unsigned int  ColorNum_2, Red_2, Green_2, Blue_2;
+
+    ReadSensorHTColor(IN_2, ColorNum, Red, Green, Blue);
+    ReadSensorHTColor(IN_3, ColorNum_2, Red_2, Green_2, Blue_2);
+
+    A = Red, Green, Blue; //  < 82 -  menor que 82 PRETO
+    A = A/2;
+    B = Red_2, Green_2, Blue_2; // > 82 - Maior que 82 BRANCO
+    B = B/2;
+
+    VA = ColorNum;
+    VB = ColorNum_2;
+
+     ClearScreen();
+     NumOut(20, LCD_LINE2, A);//meio direita
+     NumOut(20, LCD_LINE6, B);//meio esquerda
+
+     NumOut(60, LCD_LINE2, VA);
+     NumOut(60, LCD_LINE6, VB);
+
+     //A e D
+     //B e C
+}
+
+//--- Fim da função que faz a leitura do sensor de cor ---
+//======================================================================================
+
+//======================================================================================
+//--- Função para fazer leitura dos sensores: inclinação e toques ---
+
+void lerDistancia(){
+
+       SetSensor(IN_4, SENSOR_TOUCH);
+       Ultra = Sensor(IN_4);
+       NumOut(60, LCD_LINE4, Ultra);
+}
+void lerResgate(){
+       SetSensor(IN_1, SENSOR_TOUCH);
+       Resgate = Sensor(IN_1);
+       NumOut(20, LCD_LINE4, Resgate);
+}
+
+//--- Fim da função de leitura dos sensores: inclinação e toques ---
+//======================================================================================
+
+//======================================================================================
+//--- Funções para controle de locomoção dos motores do robô ---
+
+void Garra_D(){
+    OnFwd(OUT_A, vel_F);
+}
+void Garra_S(){
+    OnRev(OUT_A, vel_F);
+}
+void Garra_P(){
+    OnFwd(OUT_A, 0);
+}
+void  Frente(){
+    OnFwd(OUT_B, FRENTE);
+    OnFwd(OUT_C, FRENTE);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void Rampa()  {
+    OnFwd(OUT_B, RAMPA);
+    OnFwd(OUT_C, RAMPA);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void capoha() {
+    OnFwd(OUT_B, frentao);
+    OnFwd(OUT_C, frentao);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void Tras_2()  {
+    OnRev(OUT_B, FRENTE);
+    OnRev(OUT_C, FRENTE);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void Tras()  {
+    OnRev(OUT_B, SEGUIDOR);
+    OnRev(OUT_C, SEGUIDOR);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void Esquerda()  {
+    OnFwd(OUT_B, SEGUIDOR + limiar);
+    OnRev(OUT_C, SEGUIDOR + limiar);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void Esquerda2()  {
+    OnFwd(OUT_B, SEGUIDOR);
+    OnRev(OUT_C, SEGUIDOR);
+    lerSensorDeLinha();
+}
+void Direita()  {
+    OnRev(OUT_B, SEGUIDOR + limiar);
+    OnFwd(OUT_C, SEGUIDOR + limiar);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void Direita2()  {
+    OnRev(OUT_B, SEGUIDOR);
+    OnFwd(OUT_C, SEGUIDOR);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void Direita_F()  {
+    OnRev(OUT_B, vel_F);
+    OnFwd(OUT_C, vel_F);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void Esquerda_F()  {
+    OnFwd(OUT_B, vel_F);
+    OnRev(OUT_C, vel_F);
+    lerSensorDeLinha();
+}
+void Parar()  {
+    OnFwd(OUT_B, 0);
+    OnFwd(OUT_C, 0);
+    lerSensorDeLinha();
+    //lerDistancia();
+}
+void curva135Direita(){
+     //RotateMotorEx(‘ports',‘speed',‘degrees',‘turnpct',‘sync', 'stop')
+     RotateMotorEx(OUT_BC, 50, 1.5*curva, 100, true, true);
+     lerSensorDeLinha();
+}
+void curva135Esquerda(){
+     //RotateMotorEx(‘ports',‘speed',‘degrees',‘turnpct',‘sync', 'stop')
+     RotateMotorEx(OUT_BC, 50, 1.7*curva, -100, true, true);
+     lerSensorDeLinha();
+}
+
+//--- Fim das funções de controle para locomoção do robô ---
+//======================================================================================
+
+//======================================================================================
+//--- Funções para controle dos motores que desvia do obstaculo com mais velocidade ---
+
+void  Frente_O()  {
+    OnFwd(OUT_C, OBSTACULO);
+    OnFwd(OUT_B, OBSTACULO);
+    lerSensorDeLinha();
+    //lerDistancia();
+  }
+void Tras_O() {
+    OnRev(OUT_C, OBSTACULO);
+    OnRev(OUT_B, OBSTACULO);
+    lerSensorDeLinha();
+    //lerDistancia();
+  }
+void Esquerda_O()  {
+    OnFwd(OUT_B, OBSTACULO);
+    OnRev(OUT_C, OBSTACULO);
+    lerSensorDeLinha();
+    //lerDistancia();
+  }
+void Direita_O()  {
+    OnRev(OUT_B, OBSTACULO);
+    OnFwd(OUT_C, OBSTACULO);
+    lerSensorDeLinha();
+    //lerDistancia();
+  }
+
+//--- Fim das funções de controle dos motores que desvia do obstaculo ---
+//======================================================================================
+
+//======================================================================================
+//--- Função para controle e execução do seguidor de linha normal ---
+
+void Seguidor(){
+
+  //Branco -  Branco: Frente
+  lerSensorDeLinha();
+  if(A > branco && B > branco)
+  {
+         Frente();
+  }
+
+  //Branco - Preto: Esquerda
+  lerSensorDeLinha();
+  if(A > branco && B < preto)
+  {
+         Esquerda();
+         Wait(0.1);
+  }
+
+  //Preto - Branco: Direita
+  lerSensorDeLinha();
+  if(A < preto && B > branco)
+  {
+         Direita();
+         Wait(0.1);
+  }
+
+  //Preto - Preto:
+  //Análise para detectar até que um sensor saia do preto e ou outro no branco
+  lerSensorDeLinha();
+  if(A < preto && B < preto){
+   while(A < preto && B < preto){
+     Frente();}
+     lerSensorDeLinha();
+     if(A < preto && B > branco){
+        Frente();
+        Wait(500);
+        Parar();
+        Wait(10);
+        lerSensorDeLinha();
+        while(B > branco){
+         Direita();}//fim do 2 while
+     }//fim do 2 if
+     if(A > branco && B < preto){
+        Frente();
+        Wait(500);
+        Parar();
+        Wait(10);
+        lerSensorDeLinha();
+        while(A > branco){
+         Esquerda();}//fim do 2 while
+     }//fim do 2 if
+   }
+}
+
+//--- Fim da função para controle e execução do seguidor de linha normal ---
+//======================================================================================
+
+//======================================================================================
+//--- Função para detectar os verdes antes do seguidor normal ---
+
+void seguidorVerde(){
+       lerSensorDeLinha();
+       //int x;
+    //---Verde Verde---
+    if (VA == verde && VB == verde || VA == verde_2 && VB == verde_2){
+       Parar();
+       Wait(10);
+       lerSensorDeLinha();
+       while(VA == verde && VB == verde || VA == verde_2 && VB == verde_2){
+         Frente();
+         Wait(50);}
+         lerSensorDeLinha();
+         if(A > branco && B > branco){
+            Seguidor();}
+         lerSensorDeLinha();
+         if(A < preto || B < preto){
+         lerSensorDeLinha();
+         while(A < preto || B < preto){
+         Frente();
+         Wait(50);}//fim do 2 while
+         }//fim do 2 if
+
+          //x = Random(100);
+          //if (x % 2 == 0)
+          //{
+            curva135Direita();
+            while(!(B < preto)){
+            Direita();
+             }//fim do WHILE.
+       }//fim do 1IF
+
+    //---Verde Direita---
+    lerSensorDeLinha();
+    lerSensorDeLinha();
+    if (VA == verde && B > branco || VA == verde_2 && B > branco){
+    while(VA == verde && B > branco || VA == verde_2 && B > branco){
+       Frente();
+       Wait(5);}
+       lerSensorDeLinha();
+       if(A < preto){
+        while(A < preto){
+         Frente();
+         Wait(10);}
+         while(!(A < preto)){
+         Direita();
+         Wait(10);}
+        }//if(A > branco){
+           //Frente();}
+       }
+    //---Verde Esquerda---
+    if (A > branco && VB == verde || A > branco && VB == verde_2){
+    while(A > branco && VB == verde || A > branco && VB == verde_2){
+       Frente();
+       Wait(5);}
+       lerSensorDeLinha();
+       if(B < preto){
+        while(B < preto){
+         Frente();
+         Wait(10);}
+         while(!(B < preto)){
+         Esquerda();
+         Wait(10);}
+       } //if(B > branco){
+            //Frente();}
+       }
+    Seguidor();
+}
+//--- Fim da função para detectar os verdes antes do seguidor normal ---
+//======================================================================================
+
+//-------------------------------------------------------
+void desvio(){
+      Tras();
+      Wait(800);
+      Parar();
+      Wait(100);
+      Direita_O();
+      Wait(1200);
+      Parar();
+      Wait(100);
+      Frente_O();
+      Wait(1500);
+      Parar();
+      Wait(100);
+      Esquerda_O();
+      Wait(1250);
+      Parar();
+      Wait(100);
+      Frente_O();
+      Wait(2000);
+      Parar();
+      Wait(100);
+      Esquerda_O();
+      Wait(1550);
+      Frente();
+      Wait(300);
+      lerSensorDeLinha();
+      while(A < branco)
+      {
+      Frente();
+        lerSensorDeLinha();
+        if(A > preto){
+          Esquerda();
+          Wait(1);
+          Seguidor();
+        }
+        capoha();
+      }
+}
+
+void desvio_2(){
+      Tras();
+      Wait(800);
+      Parar();
+      Wait(100);
+      Esquerda_O();
+      Wait(1200);
+      Parar();
+      Wait(100);
+      Frente_O();
+      Wait(1500);
+      Parar();
+      Wait(100);
+      Direita_O();
+      Wait(1250);
+      Parar();
+      Wait(100);
+      Frente_O();
+      Wait(2000);
+      Parar();
+      Wait(100);
+      Direita_O();
+      Wait(1550);
+      Frente();
+      Wait(300);
+      lerSensorDeLinha();
+      while(B < branco)
+      {
+      Frente();
+        lerSensorDeLinha();
+        if(B > preto){
+          Esquerda();
+          Wait(1);
+          Seguidor();
+        }
+        capoha();
+      }
+}
+//---Triangulos---
+void t_1(){
+
+      //resgate após o toque
+      Tras_O();
+      Wait(560);
+      Parar();
+      Wait(10);
+      Esquerda_O();
+      Wait(550);
+      Parar();
+      Wait(10);
+      Rampa();
+      Wait(1700);
+      Parar();
+      Wait(10);
+      Esquerda_O();
+      Wait(1353);
+      Parar();
+      Wait(10);
+
+      //Soltar vitimias
+      RotateMotor(OUT_BC, 100, -500);
+      Parar();
+      Wait(150);
+      Rampa();
+      Wait(100);
+      RotateMotor(OUT_BC, 100, -600);
+      Parar();
+      Wait(150);
+      Rampa();
+      Wait(40);
+      Parar();
+      Wait(10);
+      Direita_O();
+      Wait(1250);
+      Parar();
+      Wait(10);
+
+      //Testar 2 Parede depois do triangulo.
+      RotateMotor(OUT_BC, 80, 1800);
+      Parar();
+      Wait(10);
+      lerResgate();
+       if(Resgate == 0){
+        RV();
+      }
+      Parar();
+      Wait(10);
+      RotateMotor(OUT_B, 100, 300);
+      Parar();
+      Wait(10);
+      Frente_O();
+      Wait(1600);
+      Parar();
+      Wait(10);
+      RotateMotor(OUT_B, 100, 400);
+      Parar();
+      Wait(10);
+      Frente();
+      Wait(500);
+      Parar();
+      Wait(10);
+      Esquerda_O();
+      Wait(1400);
+      Parar();
+      Wait(10);
+      Tras_O();
+      Wait(63);
+      Parar();
+      Wait(10);
+      Garra_D();
+      Wait(2000);
+      Garra_P();
+      Wait(10);
+      Direita();
+      Wait(305);
+
+      
+
+      //Testa 3 Parede depois do triangulo.
+      RotateMotor(OUT_BC, 80, 2500);
+      Parar();
+      Wait(10);
+      lerResgate();
+       if(Resgate == 0){
+       RV();
+      }
+      Parar();
+      Wait(10);
+      RotateMotor(OUT_B, 100, 700);
+      Parar();
+      Wait(10);
+      Frente_O();
+      Wait(1000);
+      Parar();
+      Wait(10);
+      RotateMotor(OUT_B, 100, 200);
+      Parar();
+      Wait(10);
+      Frente();
+      Wait(1500);
+      Parar();
+      Wait(10);
+      Esquerda_O();
+      Wait(1200);
+      Parar();
+      Wait(10);
+      Tras_O();
+      Wait(100);
+      Parar();
+      Wait(1);
+      Garra_D();
+      Wait(2000);
+      Garra_P();
+      Wait(10);
+      Direita();
+      Wait(300);
+
+      //Testa 4 Parede depois do triangulo.
+      RotateMotor(OUT_BC, 80, 1000);
+      Parar();
+      Wait(10);
+      lerResgate();
+       if(Resgate == 0){
+       Tras_O();
+       Wait(250);
+       Parar();
+       Wait(1);
+       Esquerda_O();
+       Wait(650);
+       Parar();
+       Wait(10);
+      }
+      RotateMotor(OUT_BC, 80, 1400);
+      Parar();
+      Wait(10);
+      lerResgate();
+       if(Resgate == 0){
+       RV();
+      }
+
+      Parar();
+      Wait(10);
+      RotateMotor(OUT_B, 100, 400);
+      Parar();
+      Wait(10);
+      Garra_D();
+      Wait(2000);
+      Garra_P();
+      RotateMotor(OUT_BC, 100, 1400);
+      lerResgate();
+       if(Resgate == 0){
+        Tras_O();
+        Wait(200);
+        curva135Esquerda();
+        RotateMotor(OUT_BC, 100, -400);
+        Parar();
+        Wait(150);
+        Rampa();
+        Wait(100);
+        RotateMotor(OUT_BC, 100, -500);
+        Parar();
+        Wait(150);
+       }
+}
+
+void t_2(){
+
+}
+void t_3(){
+
+}
+//---Fim dos Triangulos---
+
+//Resgate de vitimas do meio---
+void RV(){
+
+   Tras();
+   Garra_S();
+   Wait(2000);
+   Garra_P();
+   Wait(10);
+}
+//-----------------------Resgate---------------------
+void ResInicio(){
+
+     lerResgate();
+     Rampa();
+     Wait(1300);
+     Parar();
+     Wait(10);
+     RotateMotor(OUT_B, 100, 500);
+     Parar();
+     Wait(10);
+     RotateMotor(OUT_C, 100, -200);
+     Parar();
+     Wait(10);
+     Esquerda_O();
+     Wait(750);
+     Tras_O();
+     Wait(300);
+     Parar();
+     Wait(10);
+     Garra_D();
+     Wait(2000);
+     Garra_P();
+     Wait(10);
+     RotateMotor(OUT_BC, 70, 1900);
+     //Testar Parede.
+     lerResgate();
+     if(Resgate == 0){
+     RV();}
+     Parar();
+     Wait(10);
+     RotateMotor(OUT_BC, 80, -1500);
+     Parar();
+     Wait(10);
+     Frente();
+     Wait(50);
+     Parar();
+     Wait(10);
+     Direita_O();
+     Wait(1600);
+     Parar();
+     Wait(10);
+     Tras_O();
+     Wait(1750);
+     Parar();
+     Wait(10);
+     Garra_D();
+     Wait(2000);
+     Garra_P();
+     Wait(10);
+     Direita_O();
+     Wait(400);
+     Parar();
+     Wait(10);
+     //Testar Triangulo t_1();
+     RotateMotor(OUT_BC, 80, 900);
+     Parar();
+     Wait(10);
+     lerResgate();
+     if(Resgate == 0){
+       t_1();}
+     lerResgate();
+     if(Resgate == 1){
+     capoha();
+     Wait(1000);
+     }
+     lerResgate();
+     lerDistancia();
+     lerSensorDeLinha();
+}
+
+void seguidorRampa(){
+ lerSensorDeLinha();
+ if(A  > branco && B > branco)
+     {
+      Rampa();
+     }
+ if(A > branco && B < preto)
+     {
+      Esquerda2();
+     }
+ if(A < preto && B > branco)
+     {
+      Direita2();
+     }
+ if(A < preto && B < preto){
+ while(A < preto && B < preto){
+       Rampa();
+       Wait(1000);
+       Parar();
+       Wait(10);}//fim do while.
+       lerDistancia();
+       if(Ultra == 0){
+       ResInicio();}
+     }
+  lerDistancia();
+  }
+//-------------------------------------------------------------
+task main(){
+    Garra_S();
+    Wait(1300);
+    Garra_P();
+    while(true){
+    lerSensorDeLinha();
+    lerDistancia();
+    lerResgate();
+    if(Resgate == 0){
+    desvio();}
+    if(Ultra == 1){
+    while(Ultra == 1){
+    seguidorRampa();}//fim do 1 while
+    if(Ultra == 0 || Ultra == 1){
+    while(Ultra == 0 || Ultra == 1){
+    seguidorRampa();}//fim do 2 while
+    }//fim do 2 if
+    }//fim do 1 if
+    seguidorVerde();
+ }
+}
