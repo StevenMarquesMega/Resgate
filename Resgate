@@ -1,13 +1,13 @@
-//======================================================================================
+
 //--- Parametros para controle de velocidade paras as funcões que possuem motor. ---
 
 #define FRENTE 35
 #define OBSTACULO 60
-#define SEGUIDOR 40
-#define vel_F 80
+#define SEGUIDOR 45
+#define vel_F 72.6
 #define RAMPA 90
 #define frentao 100
-#define limiar 15
+#define limiar 20
 
 //--- Fim dos parametros de controle de velocidade ---
 //======================================================================================
@@ -68,9 +68,9 @@ void lerSensorDeLinha(){
     ReadSensorHTColor(IN_2, ColorNum, Red, Green, Blue);
     ReadSensorHTColor(IN_3, ColorNum_2, Red_2, Green_2, Blue_2);
 
-    A = Red, Green, Blue; //  < 82 -  menor que 82 PRETO
+    A = Red; //  < 82 -  menor que 82 PRETO
     A = A/2;
-    B = Red_2, Green_2, Blue_2; // > 82 - Maior que 82 BRANCO
+    B = Red_2; // > 82 - Maior que 82 BRANCO
     B = B/2;
 
     VA = ColorNum;
@@ -251,7 +251,7 @@ void Seguidor(){
   lerSensorDeLinha();
   if(A > branco && B < preto)
   {
-         Esquerda();
+         Esquerda_F();
          Wait(0.1);
   }
 
@@ -259,7 +259,7 @@ void Seguidor(){
   lerSensorDeLinha();
   if(A < preto && B > branco)
   {
-         Direita();
+         Direita_F();
          Wait(0.1);
   }
 
@@ -278,6 +278,8 @@ void Seguidor(){
         lerSensorDeLinha();
         while(B > branco){
          Direita();}//fim do 2 while
+         Tras();
+         Wait(1);
      }//fim do 2 if
      if(A > branco && B < preto){
         Frente();
@@ -287,6 +289,8 @@ void Seguidor(){
         lerSensorDeLinha();
         while(A > branco){
          Esquerda();}//fim do 2 while
+         Tras();
+         Wait(1);
      }//fim do 2 if
    }
 }
@@ -581,7 +585,7 @@ void t_1(){
       RotateMotor(OUT_BC, 80, 1400);
       Parar();
       Wait(10);
-      
+
       //Testar 4 parede
       lerResgate();
        if(Resgate == 0){
@@ -597,7 +601,7 @@ void t_1(){
       Garra_P();
       RotateMotor(OUT_BC, 100, 1400);
       lerResgate();
-      
+
        //Teste de trinagulo de volta.
        if(Resgate == 0){
         Parar();
@@ -681,7 +685,7 @@ void ResInicio(){
      Wait(2000);
      Garra_P();
      Wait(10);
-     
+
      //Meio da sala de resgate
      RotateMotor(OUT_BC, 70, 1900);
      //Testar Parede.
@@ -713,19 +717,58 @@ void ResInicio(){
      Wait(400);
      Parar();
      Wait(10);
-     
-     //Testar Triangulo t_1();
+
+     //Testar Triangulo t_1
      RotateMotor(OUT_BC, 80, 900);
      Parar();
      Wait(10);
      lerResgate();
      if(Resgate == 0){
        t_1();}
+
+     //Testar parede senão houver o t_1
      lerResgate();
      if(Resgate == 1){
-     capoha();
-     Wait(1000);
-     }
+     RotateMotor(OUT_BC, 80, 800);
+     Parar();
+     Wait(10);}//fim do 1 if
+     
+     lerResgate();
+     if(Resgate == 0){
+      RotateMotor(OUT_C, 100, 500);
+      RotateMotor(OUT_B, 80, -700);
+      Parar();
+      Wait(10);
+      RotateMotor(OUT_C, 80, -500);
+      Parar();
+      Wait(10);
+      Frente_O();
+      Wait(1500);
+      Parar();
+      Wait(10);
+      Esquerda_O();
+      Wait(1200);
+      Parar();
+      Wait(10);
+      Tras_O();
+      Wait(300);
+      Parar();
+      Wait(1);
+      Garra_D();
+      Wait(2000);
+      Garra_P();
+      Wait(10);
+      Direita();
+      Wait(300);
+      Parar();
+      Wait(10);}
+      
+      //Testar Triangulo t_2
+      RotateMotor(OUT_BC, 70, 1900);
+      lerResgate();
+      if(Resgate == 0){
+         t_2();}
+     
      lerResgate();
      lerDistancia();
      lerSensorDeLinha();
