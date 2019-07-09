@@ -1,4 +1,3 @@
-
 //--- Parametros para controle de velocidade paras as funcões que possuem motor. ---
 
 #define FRENTE 35
@@ -279,7 +278,7 @@ void Seguidor(){
         while(B > branco){
          Direita();}//fim do 2 while
          Tras();
-         Wait(1);
+         Wait(0.8);
      }//fim do 2 if
      if(A > branco && B < preto){
         Frente();
@@ -290,7 +289,7 @@ void Seguidor(){
         while(A > branco){
          Esquerda();}//fim do 2 while
          Tras();
-         Wait(1);
+         Wait(0.8);
      }//fim do 2 if
    }
 }
@@ -375,81 +374,84 @@ void seguidorVerde(){
 //======================================================================================
 //--- Função para desvio de obstaculo para os dois lados ---
 void desvio(){
-      Tras();
-      Wait(800);
-      Parar();
-      Wait(100);
-      Direita_O();
-      Wait(1200);
-      Parar();
-      Wait(100);
-      Frente_O();
-      Wait(1500);
-      Parar();
-      Wait(100);
-      Esquerda_O();
-      Wait(1250);
-      Parar();
-      Wait(100);
-      Frente_O();
-      Wait(2000);
-      Parar();
-      Wait(100);
-      Esquerda_O();
-      Wait(1550);
-      Frente();
-      Wait(300);
-      lerSensorDeLinha();
-      while(A > branco)
-      {
-      Frente();
-        lerSensorDeLinha();
-        if(A < preto){
-          Esquerda();
-          Wait(1);
-          Seguidor();
-        }
-        capoha();
-      }
-}
 
-void desvio_2(){
+     int x;
+     
+     x = Random(3);
+     
+     //Direita
+     if(x == 1){
       Tras();
-      Wait(800);
+      Wait(600);
+      Parar();
+      Wait(100);
+      Direita_O();
+      Wait(1000);
+      Parar();
+      Wait(100);
+      Frente_O();
+      Wait(500);
+      Parar();
+      Wait(10);
+      OnFwd(OUT_B, 80);
+      OnFwd(OUT_C, 20);
+      Wait(4500);
+      Parar();
+      Wait(10);
+
+      lerSensorDeLinha();
+      if(B > branco){
+      while(B > branco){
+           Frente();
+           Wait(50);
+       }
+      lerSensorDeLinha();
+      if(B < preto){
+         Frente();
+         Wait(100);
+         lerSensorDeLinha();
+         while(B > branco){
+          Direita();}
+      }
+   }//fim do if
+}//fim do x
+
+      //Esquerda
+      if(x == 2){
+      Tras();
+      Wait(600);
       Parar();
       Wait(100);
       Esquerda_O();
-      Wait(1200);
+      Wait(1000);
       Parar();
       Wait(100);
       Frente_O();
-      Wait(1500);
+      Wait(600);
       Parar();
-      Wait(100);
-      Direita_O();
-      Wait(1250);
+      Wait(10);
+      OnFwd(OUT_B, 20);
+      OnFwd(OUT_C, 80);
+      Wait(4250);
       Parar();
-      Wait(100);
-      Frente_O();
-      Wait(2000);
-      Parar();
-      Wait(100);
-      Direita_O();
-      Wait(1550);
-      Frente();
-      Wait(300);
+      Wait(10);
+
       lerSensorDeLinha();
-      while(B > branco)
-      {
-      Frente();
-        lerSensorDeLinha();
-        if(B < preto){
-          Esquerda();
-          Wait(1);
-          Seguidor();
-        }
-        capoha();
+      if(A > branco){
+      while(A > branco){
+           Frente();
+           Wait(50);
+       }
+      lerSensorDeLinha();
+      if(A < preto){
+         Frente();
+         Wait(100);
+         lerSensorDeLinha();
+         while(A > branco){
+         Esquerda();}
       }
+   }//fim do if
+  }//fim do x
 }
 
 //--- Fim da função desvio de obstaculo ---
@@ -620,7 +622,7 @@ void t_1(){
         Parar();
         Wait(10);
         Esquerda_O();
-        Wait(2000);
+        Wait(2600);
         Parar();
         Wait(10);
 
@@ -637,7 +639,72 @@ void t_1(){
 }
 
 void t_2(){
+        
+        //---teste parede 3
+        RotateMotor(OUT_BC, 80, 1200);
+        RotateMotor(OUT_BC, 80, 2200);
+        Parar();
+        Wait(10);
+        lerResgate();
+         if(Resgate == 0){
+          RV();}
 
+      Parar();
+      Wait(10);
+      OnRev(OUT_B, 100);
+      Wait(4000);
+      Parar();
+      Wait(1);
+      OnFwd(OUT_B, -40);
+      OnRev(OUT_C, -100);
+      Wait(3500);
+      Parar();
+      Wait(10);
+      Tras_O();
+      Wait(1300);
+      Parar();
+      Wait(1);
+      Frente_O();
+      Wait(1500);
+      Parar();
+      Wait(10);
+      Esquerda_O();
+      Wait(1200);
+      Parar();
+      Wait(10);
+      Tras_O();
+      Wait(300);
+      Parar();
+      Wait(1);
+      Garra_D();
+      Wait(2000);
+      Garra_P();
+      Wait(10);
+      Direita();
+      Wait(300);
+      
+      // Testar madeira
+      RotateMotor(OUT_BC, 80, 1300);
+      lerResgate();
+       if(Resgate == 0){
+          Tras_O();
+          Wait(250);
+          Parar();
+          Wait(10);
+          Esquerda_O();
+          Wait(600);
+          Parar();
+          Wait(10);
+       }
+       
+       //Parede 4
+       RotateMotor(OUT_BC, 80, 1500);
+       lerResgate();
+        if(Resgate == 0){
+           RV();
+        }
+        
+        
 }
 void t_3(){
 
@@ -676,7 +743,7 @@ void ResInicio(){
      Parar();
      Wait(10);
      Esquerda_O();
-     Wait(750);
+     Wait(600);
      Tras_O();
      Wait(300);
      Parar();
@@ -702,11 +769,11 @@ void ResInicio(){
      Parar();
      Wait(10);
      Direita_O();
-     Wait(2000);
+     Wait(1700);
      Parar();
      Wait(10);
      Tras_O();
-     Wait(1750);
+     Wait(1880);
      Parar();
      Wait(10);
      Garra_D();
@@ -726,32 +793,29 @@ void ResInicio(){
      if(Resgate == 0){
        t_1();}
 
+
      //Testar parede senão houver o t_1
      lerResgate();
      if(Resgate == 1){
-     RotateMotor(OUT_BC, 80, 800);
+     RotateMotor(OUT_BC, 80, 1500);
      Parar();
      Wait(10);}//fim do 1 if
-     
+
+     //Testar parede 1
      lerResgate();
      if(Resgate == 0){
-      RotateMotor(OUT_C, 100, 500);
-      RotateMotor(OUT_B, 80, -700);
+      RV();}
+      
+      //apos o toque
       Parar();
       Wait(10);
-      RotateMotor(OUT_C, 80, -500);
-      Parar();
-      Wait(10);
-      Frente_O();
-      Wait(1500);
-      Parar();
-      Wait(10);
-      Esquerda_O();
-      Wait(1200);
+      OnFwd(OUT_B, 80);
+      OnRev(OUT_C, -20);
+      Wait(3000);
       Parar();
       Wait(10);
       Tras_O();
-      Wait(300);
+      Wait(1500);
       Parar();
       Wait(1);
       Garra_D();
@@ -759,22 +823,24 @@ void ResInicio(){
       Garra_P();
       Wait(10);
       Direita();
-      Wait(300);
+      Wait(400);
       Parar();
-      Wait(10);}
-      
+      Wait(10);
+
       //Testar Triangulo t_2
-      RotateMotor(OUT_BC, 70, 1900);
+      RotateMotor(OUT_BC, 60, 1000);
       lerResgate();
       if(Resgate == 0){
-         t_2();}
-     
+         t_2();
+      }
+
      lerResgate();
      lerDistancia();
      lerSensorDeLinha();
 }
 //--- Fim da função resgate apos a rampa ---
 //======================================================================================
+
 
 //======================================================================================
 //--- Função para o seguidor da rampa ---
