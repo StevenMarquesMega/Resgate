@@ -114,7 +114,7 @@ void Garra_D(){
     OnFwd(OUT_A, vel_F);
 }
 void Garra_S(){
-    OnRev(OUT_A, vel_F);
+    OnRev(OUT_A, 100);
 }
 void Garra_P(){
     OnFwd(OUT_A, 0);
@@ -390,12 +390,12 @@ void desvio(){
       Parar();
       Wait(100);
       Frente_O();
-      Wait(500);
+      Wait(600);
       Parar();
       Wait(10);
       OnFwd(OUT_B, 80);
       OnFwd(OUT_C, 20);
-      Wait(4500);
+      Wait(4300);
       Parar();
       Wait(10);
 
@@ -470,35 +470,13 @@ void t_1(){
       Wait(550);
       Parar();
       Wait(10);
-      Rampa();
-      Wait(1700);
-      Parar();
-      Wait(10);
-      Esquerda_O();
-      Wait(1750);
-      Parar();
-      Wait(10);
 
-      //Soltar vitimias
-      RotateMotor(OUT_BC, 100, -500);
-      Parar();
-      Wait(150);
-      Rampa();
-      Wait(100);
-      RotateMotor(OUT_BC, 100, -600);
-      Parar();
-      Wait(150);
-      Rampa();
-      Wait(40);
-      Parar();
-      Wait(10);
-      Direita_O();
-      Wait(1600);
+      RotateMotor(OUT_BC, 100, 1200);
       Parar();
       Wait(10);
 
       //Testar 2 Parede depois do triangulo.
-      RotateMotor(OUT_BC, 80, 1950);
+      RotateMotor(OUT_BC, 80, 2000);
       Parar();
       Wait(10);
       lerResgate();
@@ -507,23 +485,13 @@ void t_1(){
       }
       Parar();
       Wait(10);
-      RotateMotor(OUT_C, 100, 500);
-      RotateMotor(OUT_B, 80, -700);
-      Parar();
-      Wait(10);
-      RotateMotor(OUT_C, 80, -500);
-      Parar();
-      Wait(10);
-      Frente_O();
-      Wait(1500);
-      Parar();
-      Wait(10);
-      Esquerda_O();
-      Wait(1200);
+      OnFwd(OUT_B, 80);
+      OnFwd(OUT_C, 20);
+      Wait(3500);
       Parar();
       Wait(10);
       Tras_O();
-      Wait(300);
+      Wait(1550);
       Parar();
       Wait(1);
       Garra_D();
@@ -543,23 +511,17 @@ void t_1(){
       }
       Parar();
       Wait(10);
-      RotateMotor(OUT_C, 100, 500);
-      RotateMotor(OUT_B, 80, -1000);
-      Parar();
-      Wait(10);
-      RotateMotor(OUT_C, 80, -400);
-      Parar();
-      Wait(10);
-      Frente_O();
-      Wait(1500);
-      Parar();
-      Wait(10);
-      Esquerda_O();
-      Wait(1200);
+      OnFwd(OUT_B, 80);
+      OnFwd(OUT_C, 20);
+      Wait(3500);
       Parar();
       Wait(10);
       Tras_O();
-      Wait(300);
+      Wait(1300);
+      Parar();
+      Wait(1);
+      Tras_O();
+      Wait(1300);
       Parar();
       Wait(1);
       Garra_D();
@@ -580,7 +542,15 @@ void t_1(){
        Parar();
        Wait(1);
        Esquerda_O();
-       Wait(600);
+       Wait(550);
+       Parar();
+       Wait(10);
+       Frente_O();
+       Wait(300);
+       Parar();
+       Wait(10);
+       Direita_O();
+       Wait(200);
        Parar();
        Wait(10);
       }
@@ -613,6 +583,7 @@ void t_1(){
         Garra_S();
         Wait(2000);
         Garra_P();
+        Wait(1);
         Esquerda_O();
         Wait(600);
         Parar();
@@ -622,17 +593,17 @@ void t_1(){
         Parar();
         Wait(10);
         Esquerda_O();
-        Wait(2600);
+        Wait(2400);
         Parar();
         Wait(10);
 
         //Soltar vitimias
-        RotateMotor(OUT_BC, 100, -500);
+        RotateMotor(OUT_BC, 70, -500);
         Parar();
         Wait(150);
         Rampa();
         Wait(100);
-        RotateMotor(OUT_BC, 100, -600);
+        RotateMotor(OUT_BC, 70, -400);
         Parar();
         Wait(150);
        }
@@ -641,39 +612,23 @@ void t_1(){
 void t_2(){
         
         //---teste parede 3
-        RotateMotor(OUT_BC, 80, 1200);
-        RotateMotor(OUT_BC, 80, 2200);
-        Parar();
-        Wait(10);
-        lerResgate();
-         if(Resgate == 0){
-          RV();}
+      RotateMotor(OUT_BC, 80, 1200);
+      RotateMotor(OUT_BC, 80, 2200);
+      Parar();
+      Wait(10);
+      lerResgate();
+      if(Resgate == 0){
+         RV();}
 
       Parar();
       Wait(10);
-      OnRev(OUT_B, 100);
-      Wait(4000);
-      Parar();
-      Wait(1);
-      OnFwd(OUT_B, -40);
-      OnRev(OUT_C, -100);
-      Wait(3500);
+      OnFwd(OUT_B, 80);
+      OnFwd(OUT_C, 20);
+      Wait(3000);
       Parar();
       Wait(10);
       Tras_O();
-      Wait(1300);
-      Parar();
-      Wait(1);
-      Frente_O();
-      Wait(1500);
-      Parar();
-      Wait(10);
-      Esquerda_O();
-      Wait(1200);
-      Parar();
-      Wait(10);
-      Tras_O();
-      Wait(300);
+      Wait(400);
       Parar();
       Wait(1);
       Garra_D();
@@ -733,7 +688,7 @@ void ResInicio(){
 
      lerResgate();
      Rampa();
-     Wait(1300);
+     Wait(1100);
      Parar();
      Wait(10);
      RotateMotor(OUT_B, 100, 500);
@@ -761,7 +716,7 @@ void ResInicio(){
      RV();}
      Parar();
      Wait(10);
-     RotateMotor(OUT_BC, 80, -1500);
+     RotateMotor(OUT_BC, 80, -1300);
      Parar();
      Wait(10);
      Frente();
@@ -769,11 +724,11 @@ void ResInicio(){
      Parar();
      Wait(10);
      Direita_O();
-     Wait(1700);
+     Wait(1900);
      Parar();
      Wait(10);
      Tras_O();
-     Wait(1880);
+     Wait(1800);
      Parar();
      Wait(10);
      Garra_D();
@@ -810,7 +765,7 @@ void ResInicio(){
       Parar();
       Wait(10);
       OnFwd(OUT_B, 80);
-      OnRev(OUT_C, -20);
+      OnFwd(OUT_C, 20);
       Wait(3000);
       Parar();
       Wait(10);
