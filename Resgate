@@ -1,9 +1,9 @@
 //--- Parametros para controle de velocidade paras as funcões que possuem motor. ---
 
-#define FRENTE 35
+#define FRENTE 40
 #define OBSTACULO 60
 #define SEGUIDOR 45
-#define vel_F 72.6
+#define vel_F 55
 #define RAMPA 90
 #define frentao 100
 #define limiar 20
@@ -18,7 +18,7 @@ int preto = 82;  // menor que 82 preto
 int branco = 82;// maior que 82 branco
 int verde = 4;
 int verde_2 = 3;
-unsigned int A, B, PD, PE, VA, VB;
+unsigned int A, B, VA, VB;
 unsigned int  ColorNum, Red, Green, Blue;
 unsigned int  ColorNum_2, Red_2, Green_2, Blue_2;
 
@@ -56,28 +56,25 @@ void RV();
 void lerSensorDeLinha(){
 
     SetHTColor2Mode(IN_2, HT_CMD_COLOR2_ACTIVE);// Hi Tec
-    SetSensorLowspeed(IN_2);                   // Hi Tec
+    SetSensorLowspeed(IN_2);
+    ReadSensorHTColor(IN_2, ColorNum, Red, Green, Blue);// Hi Tec
 
     SetHTColor2Mode(IN_3, HT_CMD_COLOR2_ACTIVE); // Hi Tec
     SetSensorLowspeed(IN_3);                   // Hi Tec
-
-  	unsigned int  ColorNum, Red, Green, Blue;
-  	unsigned int  ColorNum_2, Red_2, Green_2, Blue_2;
-
-    ReadSensorHTColor(IN_2, ColorNum, Red, Green, Blue);
     ReadSensorHTColor(IN_3, ColorNum_2, Red_2, Green_2, Blue_2);
 
     A = Red; //  < 82 -  menor que 82 PRETO
-    A = A/2;
     B = Red_2; // > 82 - Maior que 82 BRANCO
+    
+    A = A/2;
     B = B/2;
-
+    
     VA = ColorNum;
     VB = ColorNum_2;
 
      ClearScreen();
      NumOut(20, LCD_LINE2, A);//meio direita
-     NumOut(20, LCD_LINE6, B);//meio esquerda
+     NumOut(20, LCD_LINE6, B);//meio esqu\erda
 
      NumOut(60, LCD_LINE2, VA);
      NumOut(60, LCD_LINE6, VB);
@@ -266,24 +263,25 @@ void Seguidor(){
   if(A < preto && B < preto){
    while(A < preto && B < preto){
      Frente();}
+     
      lerSensorDeLinha();
      if(A < preto && B > branco){
         Frente();
-        Wait(500);
+        Wait(100);
         Parar();
         Wait(10);
         lerSensorDeLinha();
         while(B > branco){
-         Direita();}//fim do 2 while
+         Direita2();}//fim do 2 while
      }//fim do 2 if
      if(A > branco && B < preto){
         Frente();
-        Wait(500);
+        Wait(100);
         Parar();
         Wait(10);
         lerSensorDeLinha();
         while(A > branco){
-         Esquerda();}//fim do 2 while
+         Esquerda2();}//fim do 2 while
      }//fim do 2 if
    }
 }
@@ -328,7 +326,6 @@ void seguidorVerde(){
 
     //---Verde Direita---
     lerSensorDeLinha();
-    lerSensorDeLinha();
     if (VA == verde && B > branco || VA == verde_2 && B > branco){
     while(VA == verde && B > branco || VA == verde_2 && B > branco){
        Frente();
@@ -338,12 +335,11 @@ void seguidorVerde(){
         while(A < preto){
          Frente();
          Wait(10);}
-         while(!(A < preto)){
-         Direita();
-         Wait(10);}
-        }//if(A > branco){
-           //Frente();}
+         while(!(B < preto)){
+         Direita();}
+        }
        }
+    lerSensorDeLinha();
     //---Verde Esquerda---
     if (A > branco && VB == verde || A > branco && VB == verde_2){
     while(A > branco && VB == verde || A > branco && VB == verde_2){
@@ -354,11 +350,9 @@ void seguidorVerde(){
         while(B < preto){
          Frente();
          Wait(10);}
-         while(!(B < preto)){
-         Esquerda();
-         Wait(10);}
-       } //if(B > branco){
-            //Frente();}
+         while(!(A < preto)){
+         Esquerda();}
+        }
        }
     Seguidor();
 }
@@ -397,12 +391,12 @@ void desvio(){
       if(B > branco){
       while(B > branco){
            Frente();
-           Wait(50);
-       }
+           Wait(50);}
       lerSensorDeLinha();
       if(B < preto){
+      while(B < preto){
          Frente();
-         Wait(100);
+         Wait(50);}
          lerSensorDeLinha();
          while(B > branco){
           Direita();}
@@ -434,12 +428,12 @@ void desvio(){
       if(A > branco){
       while(A > branco){
            Frente();
-           Wait(50);
-       }
+           Wait(50);}
       lerSensorDeLinha();
       if(A < preto){
+      while(A < preto){
          Frente();
-         Wait(100);
+         Wait(50);}
          lerSensorDeLinha();
          while(A > branco){
          Esquerda();}
@@ -830,6 +824,7 @@ task main(){
     Garra_S();
     Wait(1300);
     Garra_P();
+    lerSensorDeLinha();
     while(true){
     lerSensorDeLinha();
     lerDistancia();
@@ -844,6 +839,7 @@ task main(){
     seguidorRampa();}//fim do 2 while
     }//fim do 2 if
     }//fim do 1 if
+    lerSensorDeLinha();
     seguidorVerde();
  }
 }
