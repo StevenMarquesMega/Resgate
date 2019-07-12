@@ -251,7 +251,6 @@ void Seguidor(){
   if(A > branco && B < preto)
   {
          Esquerda_F();
-         Wait(0.1);
   }
 
   //Preto - Branco: Direita
@@ -259,7 +258,6 @@ void Seguidor(){
   if(A < preto && B > branco)
   {
          Direita_F();
-         Wait(0.1);
   }
 
   //Preto - Preto:
@@ -277,8 +275,6 @@ void Seguidor(){
         lerSensorDeLinha();
         while(B > branco){
          Direita();}//fim do 2 while
-         Tras();
-         Wait(0.8);
      }//fim do 2 if
      if(A > branco && B < preto){
         Frente();
@@ -288,8 +284,6 @@ void Seguidor(){
         lerSensorDeLinha();
         while(A > branco){
          Esquerda();}//fim do 2 while
-         Tras();
-         Wait(0.8);
      }//fim do 2 if
    }
 }
@@ -610,8 +604,8 @@ void t_1(){
 }
 
 void t_2(){
-        
-        //---teste parede 3
+
+      //---teste parede 3
       RotateMotor(OUT_BC, 80, 1200);
       RotateMotor(OUT_BC, 80, 2200);
       Parar();
